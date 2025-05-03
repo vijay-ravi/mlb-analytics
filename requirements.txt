@@ -1,5 +1,6 @@
 prefect
-MLB-StatsAPI
+prefect-aws
+mlb-statsapi
 pandas
 boto3
 snowflake-connector-python
@@ -7,4 +8,3 @@ snowflake-sqlalchemy
 dbt-core
 dbt-snowflake
 python-dotenv
-prefect-aws
