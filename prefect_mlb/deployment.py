@@ -6,6 +6,9 @@ if __name__ == "__main__":
     flow.from_source(
         source=SOURCE_REPO,
         entrypoint="prefect_mlb/flows/mlb_flow.py:mlb_flow",
+        pull_steps=[
+            "pip install -r requirements.txt"
+        ]
     ).deploy(
         name="MLB Analytics Deployment",
         version="1.0",
