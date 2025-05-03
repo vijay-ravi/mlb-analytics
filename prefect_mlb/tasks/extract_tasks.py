@@ -5,7 +5,7 @@ import boto3
 from datetime import datetime
 import logging
 
-from prefect.blocks.aws import AwsCredentials, S3Bucket
+from prefect_aws import AwsCredentials, S3Bucket
 
 # Load AWS credentials and S3 bucket from Prefect blocks
 aws_creds = AwsCredentials.load("prefect-aws-credentials")
