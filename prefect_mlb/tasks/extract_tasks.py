@@ -7,14 +7,7 @@ import logging
 
 from prefect_aws import AwsCredentials, S3Bucket
 
-# Load AWS credentials and S3 bucket from Prefect blocks
-aws_creds = AwsCredentials.load("prefect-aws-credentials")
-s3_bucket = S3Bucket.load("prefect-s3-bucket")
 
-AWS_ACCESS_KEY_ID = aws_creds.access_key_id
-AWS_SECRET_ACCESS_KEY = aws_creds.secret_access_key
-S3_BUCKET_NAME = s3_bucket.bucket
-S3_PREFIX = "mlb_data"
 
 @task(name="Get Recent MLB Games", retries=3, retry_delay_seconds=30)
 def get_recent_games(team_name, start_date, end_date):
@@ -54,8 +47,17 @@ def fetch_single_game_boxscore(game_id, start_date, end_date, team_name):
     return game_data
 
 @task(name="Upload Data to S3", retries=3, retry_delay_seconds=30)
-def upload_data_to_s3(game_data, team_name):
+async def upload_data_to_s3(game_data, team_name):
     '''This task uploads the data to S3 instead of saving locally.'''
+    # Load AWS credentials and S3 bucket from Prefect blocks
+    aws_creds = await AwsCredentials.load("prefect-aws-credentials")
+    s3_bucket = await S3Bucket.load("prefect-s3-bucket")
+
+    AWS_ACCESS_KEY_ID = aws_creds.aws_access_key_id 
+    AWS_SECRET_ACCESS_KEY = aws_creds.aws_secret_access_key
+    S3_BUCKET_NAME = s3_bucket.bucket_name
+    S3_PREFIX = "mlb_data"
+    
     s3_client = boto3.client(
         's3',
         aws_access_key_id=AWS_ACCESS_KEY_ID,
