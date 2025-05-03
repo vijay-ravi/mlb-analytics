@@ -1,0 +1,11 @@
+Metadata-Version: 2.4
+Name: prefect_mlb
+Version: 0.1.0
+Requires-Dist: prefect
+Requires-Dist: python-dotenv
+Requires-Dist: mlb-statsapi
+Requires-Dist: boto3
+Requires-Dist: snowflake-connector-python
+Requires-Dist: sqlalchemy
+Requires-Dist: pandas
+Dynamic: requires-dist

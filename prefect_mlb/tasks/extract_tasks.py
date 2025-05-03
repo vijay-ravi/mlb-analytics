@@ -4,7 +4,7 @@ import json
 import boto3
 from datetime import datetime
 import logging
-from ..utils.config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_BUCKET_NAME, S3_PREFIX
+from prefect_mlb.utils.config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_BUCKET_NAME, S3_PREFIX
 
 @task(name="Get Recent MLB Games", retries=3, retry_delay_seconds=30)
 def get_recent_games(team_name, start_date, end_date):
@@ -65,4 +65,4 @@ def upload_data_to_s3(game_data, team_name):
     )
     
     logging.info(f"Uploaded data to s3://{S3_BUCKET_NAME}/{s3_key}")
-    return f"s3://{S3_BUCKET_NAME}/{s3_key}"
+    return f"s3://{S3_BUCKET_NAME}/{s3_key}", today

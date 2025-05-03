@@ -2,8 +2,8 @@ version: 2
 
 sources:
   - name: raw
-    database: "{{ env_var('SNOWFLAKE_DATABASE') }}"
-    schema: "{{ env_var('SNOWFLAKE_SCHEMA_RAW') }}"
+    database: "{{ env_var('DBT_SNOWFLAKE_DATABASE') }}"
+    schema: "{{ env_var('DBT_SNOWFLAKE_SCHEMA_RAW') }}"
     tables:
       - name: mlb_games
         description: Raw MLB game data ingested from S3

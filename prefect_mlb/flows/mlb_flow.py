@@ -3,9 +3,9 @@ from datetime import datetime
 import os
 import logging
 
-from ..tasks.extract_tasks import get_recent_games, fetch_single_game_boxscore, upload_data_to_s3
-from ..tasks.load_tasks import load_data_to_snowflake, run_dbt_models
-from ..tasks.artifact_tasks import create_game_analysis_artifact
+from prefect_mlb.tasks.extract_tasks import get_recent_games, fetch_single_game_boxscore, upload_data_to_s3
+from prefect_mlb.tasks.load_tasks import load_data_to_snowflake
+from prefect_mlb.tasks.artifact_tasks import create_game_analysis_artifact
 
 @flow(name="MLB Analytics Flow")
 def mlb_flow(team_name: str, start_date: str, end_date: str):
@@ -33,10 +33,10 @@ def mlb_flow(team_name: str, start_date: str, end_date: str):
         game_data.append(boxscore)
     
     # Step 3: Load - Upload data to S3 (Bronze layer)
-    s3_path = upload_data_to_s3(game_data, team_name)
+    s3_path, today = upload_data_to_s3(game_data, team_name)
     
     # Step 4: Load - Copy data from S3 to Snowflake Raw (Bronze layer)
-    rows_loaded = load_data_to_snowflake(s3_path)
+    rows_loaded = load_data_to_snowflake(s3_path, today)
     logging.info(f"Loaded {rows_loaded} rows to Snowflake Raw layer")
 
     return s3_path

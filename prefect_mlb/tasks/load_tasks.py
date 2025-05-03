@@ -3,14 +3,14 @@ import snowflake.connector
 import logging
 from sqlalchemy import create_engine
 import os
-from ..utils.config import (
+from prefect_mlb.utils.config import (
     SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, 
     SNOWFLAKE_ROLE, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE,
     SNOWFLAKE_SCHEMA_RAW, get_snowflake_connection_string
 )
 
 @task(name="Load Data to Snowflake", retries=3, retry_delay_seconds=60)
-def load_data_to_snowflake(s3_path):
+def load_data_to_snowflake(s3_path, today):
     '''This task will load data from S3 to Snowflake using COPY command.'''
     # Extract filename from S3 path
     filename = s3_path.split('/')[-1]
@@ -36,10 +36,9 @@ def load_data_to_snowflake(s3_path):
             SELECT 
                 $1, 
                 '{filename}'
-            FROM @{SNOWFLAKE_DATABASE}.{SNOWFLAKE_SCHEMA_RAW}.MLB_S3_STAGE/{filename}
+            FROM @{SNOWFLAKE_DATABASE}.{SNOWFLAKE_SCHEMA_RAW}.MLB_S3_STAGE/{today}/{filename}
         )
         FILE_FORMAT = (TYPE = 'JSON')
-        ON_ERROR = 'CONTINUE';
         """
         
         cursor.execute(copy_command)
@@ -53,19 +52,19 @@ def load_data_to_snowflake(s3_path):
         cursor.close()
         conn.close()
 
-# @task(name="Run dbt Models", retries=2, retry_delay_seconds=30)
-# def run_dbt_models():
-#     '''This task runs dbt models to transform the data.'''
-#     dbt_project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../dbt"))
+@task(name="Run dbt Models", retries=2, retry_delay_seconds=30)
+def run_dbt_models():
+    '''This task runs dbt models to transform the data.'''
+    dbt_project_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../dbt_mlb"))
     
-#     # Change to the dbt project directory
-#     os.chdir(dbt_project_dir)
+    # Change to the dbt project directory
+    os.chdir(dbt_project_dir)
     
-#     # Run dbt
-#     result = os.system("dbt run --profiles-dir .")
+    # Run dbt
+    result = os.system("dbt run --profiles-dir .")
     
-#     if result != 0:
-#         raise Exception("dbt run failed")
+    if result != 0:
+        raise Exception("dbt run failed")
     
-#     logging.info("dbt models executed successfully")
-#     return True
+    logging.info("dbt models executed successfully")
+    return True

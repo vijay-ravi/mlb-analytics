@@ -7,20 +7,21 @@ with source as (
 ),
 
 extracted as (
-    select
-        raw_json:game_id::VARCHAR as game_id,
-        raw_json:search_start_date::VARCHAR as search_start_date,
-        raw_json:search_end_date::VARCHAR as search_end_date,
-        raw_json:chosen_team_name::VARCHAR as chosen_team_name,
-        raw_json:home_team::VARCHAR as home_team,
-        raw_json:away_team::VARCHAR as away_team,
-        raw_json:home_score::INTEGER as home_score,
-        raw_json:away_score::INTEGER as away_score,
-        raw_json:game_time::VARCHAR as game_time_raw,
-        ABS(raw_json:home_score::INTEGER - raw_json:away_score::INTEGER) as score_differential,
+    SELECT
+        f.value:game_id::VARCHAR       AS game_id,
+        f.value:search_start_date::VARCHAR AS search_start_date,
+        f.value:search_end_date::VARCHAR   AS search_end_date,
+        f.value:chosen_team_name::VARCHAR  AS chosen_team_name,
+        f.value:home_team::VARCHAR         AS home_team,
+        f.value:away_team::VARCHAR         AS away_team,
+        f.value:home_score::INTEGER        AS home_score,
+        f.value:away_score::INTEGER        AS away_score,
+        f.value:game_time::VARCHAR         AS game_time_raw,
+        ABS(f.value:home_score::INTEGER - f.value:away_score::INTEGER) AS score_diff,
         load_timestamp,
         filename
-    from source
+    FROM source
+    , LATERAL FLATTEN(input => raw_json) AS f
 )
 
 select
@@ -33,7 +34,7 @@ select
     home_score,
     away_score,
     game_time_raw,
-    score_differential,
+    score_diff,
     load_timestamp,
     filename
 from extracted

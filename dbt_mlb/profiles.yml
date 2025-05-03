@@ -2,24 +2,24 @@ mlb_analytics:
   outputs:
     dev:
       type: snowflake
-      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
-      user: "{{ env_var('SNOWFLAKE_USER') }}"
-      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
-      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
-      database: "{{ env_var('SNOWFLAKE_DATABASE') }}"
-      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
-      schema: "{{ env_var('SNOWFLAKE_SCHEMA_STAGING') }}"
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
+      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('DBT_SNOWFLAKE_ROLE') }}"
+      database: "{{ env_var('DBT_SNOWFLAKE_DATABASE') }}"
+      warehouse: "{{ env_var('DBT_SNOWFLAKE_WAREHOUSE') }}"
+      schema: "{{ env_var('DBT_SNOWFLAKE_SCHEMA_RAW') }}"
       threads: 4
       
     prod:
       type: snowflake
-      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
-      user: "{{ env_var('SNOWFLAKE_USER') }}"
-      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
-      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
-      database: "{{ env_var('SNOWFLAKE_DATABASE') }}"
-      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE') }}"
-      schema: "{{ env_var('SNOWFLAKE_SCHEMA_STAGING') }}"
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
+      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('DBT_SNOWFLAKE_ROLE') }}"
+      database: "{{ env_var('DBT_SNOWFLAKE_DATABASE') }}"
+      warehouse: "{{ env_var('DBT_SNOWFLAKE_WAREHOUSE') }}"
+      schema: "{{ env_var('DBT_SNOWFLAKE_SCHEMA_ANALYTICS') }}"
       threads: 8
       
   target: dev

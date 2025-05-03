@@ -4,7 +4,7 @@ import pandas as pd
 import snowflake.connector
 import logging
 from sqlalchemy import create_engine
-from ..utils.config import (
+from prefect_mlb.utils.config import (
     SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, SNOWFLAKE_PASSWORD, 
     SNOWFLAKE_ROLE, SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE,
     SNOWFLAKE_SCHEMA_ANALYTICS, SNOWFLAKE_SCHEMA_STAGING, SNOWFLAKE_SCHEMA_RAW,
