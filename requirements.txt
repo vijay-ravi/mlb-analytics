@@ -7,3 +7,4 @@ snowflake-sqlalchemy
 dbt-core
 dbt-snowflake
 python-dotenv
+prefect-aws
