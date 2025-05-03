@@ -1,0 +1,9 @@
+prefect
+MLB-StatsAPI
+pandas
+boto3
+snowflake-connector-python
+snowflake-sqlalchemy
+dbt-core
+dbt-snowflake
+python-dotenv
