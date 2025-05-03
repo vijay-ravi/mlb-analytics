@@ -4,7 +4,17 @@ import json
 import boto3
 from datetime import datetime
 import logging
-from prefect_mlb.utils.config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_BUCKET_NAME, S3_PREFIX
+
+from prefect.blocks.aws import AwsCredentials, S3Bucket
+
+# Load AWS credentials and S3 bucket from Prefect blocks
+aws_creds = AwsCredentials.load("prefect-aws-credentials")
+s3_bucket = S3Bucket.load("prefect-s3-bucket")
+
+AWS_ACCESS_KEY_ID = aws_creds.access_key_id
+AWS_SECRET_ACCESS_KEY = aws_creds.secret_access_key
+S3_BUCKET_NAME = s3_bucket.bucket
+S3_PREFIX = "mlb_data"
 
 @task(name="Get Recent MLB Games", retries=3, retry_delay_seconds=30)
 def get_recent_games(team_name, start_date, end_date):
